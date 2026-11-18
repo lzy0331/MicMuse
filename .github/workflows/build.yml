@@ -1,5 +1,8 @@
 name: build
 
+permissions:
+  contents: write
+
 on:
   push:
   workflow_dispatch:
@@ -73,13 +76,33 @@ jobs:
       - name: 构建注入模块
         continue-on-error: true
         run: |
+          set +e
+          exec > >(tee build.log) 2>&1
           git clone --depth 1 https://github.com/topjohnwu/zygisk-module-sample "$RUNNER_TEMP/zndk"
-          mkdir -p "$RUNNER_TEMP/zndk/module/jni/include"
-          cp "$RUNNER_TEMP/zndk/module/jni/zygisk.hpp" "$RUNNER_TEMP/zndk/module/jni/include/"
-          cd src
-          NDK="$ANDROID_HOME/ndk/27.0.12077973" ZYGISK_NDK="$RUNNER_TEMP/zndk" bash module/build.sh
-          cd module/build/out
-          zip -r "$GITHUB_WORKSPACE/micmuse-module.zip" .
+          ls -l "$RUNNER_TEMP/zndk/module/jni/"
+          cd src/module
+          cmake -S . -B build \
+            -DCMAKE_TOOLCHAIN_FILE="$ANDROID_HOME/ndk/27.0.12077973/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-28 \
+            -DZYGISK_NDK="$RUNNER_TEMP/zndk" \
+            -DZYGISK_INCLUDE="$RUNNER_TEMP/zndk/module/jni" \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j4
+          mkdir -p out/zygisk
+          cp build/zygisk-micmuse.so out/zygisk/arm64.so 2>/dev/null || cp build/libzygisk-micmuse.so out/zygisk/arm64.so
+          cp module.prop targets.conf out/
+          ls -lR out
+          cd out && zip -r "$GITHUB_WORKSPACE/micmuse-module.zip" .
+
+      - name: 把构建日志提交回仓库
+        if: always()
+        run: |
+          cp build.log build-log.txt 2>/dev/null || echo "(no log)" > build-log.txt
+          git config user.name "ci-bot"
+          git config user.email "ci-bot@users.noreply.github.com"
+          git add -f build-log.txt
+          git commit -m "ci: 构建日志" || true
+          git push || true
 
       - name: 上传注入模块
         if: always()
