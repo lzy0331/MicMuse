@@ -25,12 +25,6 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: 安装 NDK
-        run: |
-          SM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
-          yes | "$SM" --licenses > /dev/null 2>&1 || true
-          "$SM" "ndk;27.0.12077973"
-
       - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: "8.7"
@@ -49,9 +43,8 @@ jobs:
                   addMirrors(settings.dependencyResolutionManagement.repositories)
               }
               allprojects { addMirrors(repositories) }
-              println "镜像已注入"
           } catch (Throwable t) {
-              println "镜像注入失败(不影响后续): " + t
+              println "镜像注入失败(忽略): " + t
           }
           INIT
 
@@ -64,20 +57,34 @@ jobs:
           done
           exit 1
 
-      - name: 构建注入模块
-        run: |
-          cd src
-          git clone --depth 1 https://github.com/Dr-TSNG/ZygiskNDK
-          NDK="$ANDROID_HOME/ndk/27.0.12077973" ZYGISK_NDK="$PWD/ZygiskNDK" bash module/build.sh
-          cd module/build/out
-          zip -r "$GITHUB_WORKSPACE/micmuse-module.zip" .
-
-      - uses: actions/upload-artifact@v4
+      - name: 上传 APK
+        uses: actions/upload-artifact@v4
         with:
           name: micmuse-apk
           path: src/app/build/outputs/apk/debug/app-debug.apk
 
-      - uses: actions/upload-artifact@v4
+      - name: 安装 NDK
+        continue-on-error: true
+        run: |
+          SM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SM" --licenses > /dev/null 2>&1 || true
+          "$SM" "ndk;27.0.12077973"
+
+      - name: 构建注入模块
+        continue-on-error: true
+        run: |
+          git clone --depth 1 https://github.com/topjohnwu/zygisk-module-sample "$RUNNER_TEMP/zndk"
+          mkdir -p "$RUNNER_TEMP/zndk/module/jni/include"
+          cp "$RUNNER_TEMP/zndk/module/jni/zygisk.hpp" "$RUNNER_TEMP/zndk/module/jni/include/"
+          cd src
+          NDK="$ANDROID_HOME/ndk/27.0.12077973" ZYGISK_NDK="$RUNNER_TEMP/zndk" bash module/build.sh
+          cd module/build/out
+          zip -r "$GITHUB_WORKSPACE/micmuse-module.zip" .
+
+      - name: 上传注入模块
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: micmuse-module-zip
           path: micmuse-module.zip
+          if-no-files-found: warn
