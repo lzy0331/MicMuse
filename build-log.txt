@@ -1,0 +1,102 @@
+Cloning into '/home/runner/work/_temp/zndk'...
+total 32
+-rw-r--r-- 1 runner runner   497 Nov 18 03:00 Android.mk
+-rw-r--r-- 1 runner runner   198 Nov 18 03:00 Application.mk
+-rw-r--r-- 1 runner runner  2461 Nov 18 03:00 example.cpp
+drwxr-xr-x 2 runner runner  4096 Nov 18 03:00 libcxx
+-rw-r--r-- 1 runner runner 15934 Nov 18 03:00 zygisk.hpp
+CMake Warning (deprecated) at /usr/local/lib/android/sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  /usr/local/share/cmake-4.4/Modules/CMakeDetermineSystem.cmake:152 (include)
+  CMakeLists.txt:2 (project)
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (deprecated) at /usr/local/lib/android/sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  /usr/local/lib/android/sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+  /usr/local/share/cmake-4.4/Modules/CMakeDetermineSystem.cmake:152 (include)
+  CMakeLists.txt:2 (project)
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (deprecated) at /usr/local/lib/android/sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  build/CMakeFiles/4.4.5/CMakeSystem.cmake:6 (include)
+  CMakeLists.txt:2 (project)
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- The CXX compiler identification is Clang 18.0.1
+-- Detecting CXX compiler ABI info
+CMake Warning (deprecated) at /usr/local/lib/android/sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:35 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  /home/runner/work/MicMuse/MicMuse/src/module/build/CMakeFiles/4.4.5/CMakeSystem.cmake:6 (include)
+  /home/runner/work/MicMuse/MicMuse/src/module/build/CMakeFiles/CMakeScratch/TryCompile-qdSEQZ/CMakeLists.txt:3 (project)
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (deprecated) at /usr/local/lib/android/sdk/ndk/27.0.12077973/build/cmake/android-legacy.toolchain.cmake:35 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+Call Stack (most recent call first):
+  /usr/local/lib/android/sdk/ndk/27.0.12077973/build/cmake/android.toolchain.cmake:55 (include)
+  /home/runner/work/MicMuse/MicMuse/src/module/build/CMakeFiles/4.4.5/CMakeSystem.cmake:6 (include)
+  /home/runner/work/MicMuse/MicMuse/src/module/build/CMakeFiles/CMakeScratch/TryCompile-qdSEQZ/CMakeLists.txt:3 (project)
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/local/lib/android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (0.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/runner/work/MicMuse/MicMuse/src/module/build
+[ 20%] Building CXX object CMakeFiles/zygisk-micmuse.dir/src/main.cpp.o
+[ 40%] Building CXX object CMakeFiles/zygisk-micmuse.dir/src/feeder.cpp.o
+[ 60%] Building CXX object CMakeFiles/zygisk-micmuse.dir/src/hook.cpp.o
+[ 80%] Building CXX object CMakeFiles/zygisk-micmuse.dir/src/gothook.cpp.o
+[100%] Linking CXX shared library zygisk-micmuse.so
+[100%] Built target zygisk-micmuse
+out:
+total 12
+-rw------- 1 runner runner  218 Nov 18 03:00 module.prop
+-rw------- 1 runner runner  127 Nov 18 03:00 targets.conf
+drwxr-xr-x 2 runner runner 4096 Nov 18 03:00 zygisk
+
+out/zygisk:
+total 936
+-rwxr-xr-x 1 runner runner 955368 Nov 18 03:00 arm64.so
+  adding: module.prop (deflated 6%)
+  adding: targets.conf (stored 0%)
+  adding: zygisk/ (stored 0%)
+  adding: zygisk/arm64.so (deflated 71%)
