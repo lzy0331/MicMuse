@@ -1,0 +1,46 @@
+name: build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 解包源码
+        run: |
+          mkdir -p src
+          tar -xzf MicMuse.tar.gz -C src
+          ls src
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v3
+
+      - name: 构建 APK
+        run: gradle -p src :app:assembleDebug --no-daemon
+
+      - name: 安装 NDK 并构建注入模块
+        run: |
+          sdkmanager "ndk;27.0.12077973"
+          cd src
+          git clone --depth 1 https://github.com/Dr-TSNG/ZygiskNDK
+          NDK="$ANDROID_SDK_ROOT/ndk/27.0.12077973" ZYGISK_NDK="$PWD/ZygiskNDK" bash module/build.sh
+          cd module/build/out && zip -r "$GITHUB_WORKSPACE/micmuse-module.zip" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: micmuse-apk
+          path: src/app/build/outputs/apk/debug/app-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: micmuse-module-zip
+          path: micmuse-module.zip
