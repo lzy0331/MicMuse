@@ -4,6 +4,10 @@ on:
   push:
   workflow_dispatch:
 
+env:
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,18 +25,24 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
+      - name: 接受 SDK 许可
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+
+      - name: 安装 NDK
+        run: "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.0.12077973"
+
       - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
 
       - name: 构建 APK
         run: gradle -p src :app:assembleDebug --no-daemon
 
-      - name: 安装 NDK 并构建注入模块
+      - name: 构建注入模块
         run: |
-          sdkmanager "ndk;27.0.12077973"
           cd src
           git clone --depth 1 https://github.com/Dr-TSNG/ZygiskNDK
-          NDK="$ANDROID_SDK_ROOT/ndk/27.0.12077973" ZYGISK_NDK="$PWD/ZygiskNDK" bash module/build.sh
+          NDK="$ANDROID_HOME/ndk/27.0.12077973" ZYGISK_NDK="$PWD/ZygiskNDK" bash module/build.sh
           cd module/build/out && zip -r "$GITHUB_WORKSPACE/micmuse-module.zip" .
 
       - uses: actions/upload-artifact@v4
